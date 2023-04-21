@@ -65,7 +65,7 @@ public class FirstController {
 			}
 		}
 		
-		model.addAttribute("packet-error", "Wrong ID");
+		model.addAttribute("packetError", "Wrong ID");
 		return "error-page";//will call error-page.html
 		
 		
