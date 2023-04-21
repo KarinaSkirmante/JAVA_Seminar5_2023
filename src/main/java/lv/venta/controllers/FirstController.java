@@ -1,6 +1,9 @@
 package lv.venta.controllers;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +13,13 @@ import lv.venta.model.Product;
 
 @Controller
 public class FirstController {
+	
+	
+	private ArrayList<Product> allProducts = new ArrayList<>(Arrays.asList(
+			new Product("Watermelon", "Pink", 1.23f, 4),
+			new Product("Tomato", "Red", 0.99f, 3),
+			new Product("Grapes", "Purple", 12.3f, 4)
+			));
 	
 	
 	@GetMapping("/hello") //localhost:8080/hello
@@ -33,4 +43,13 @@ public class FirstController {
 		return "one-product-page";//will show one-product-page.html
 	}
 
+	@GetMapping("/all-products")//localhost:8080/all-products
+	public String getAllproductsFunc(Model model)
+	{
+		model.addAttribute("packet", allProducts);
+		return "all-products-page";// will show all-products-page.html
+	}
+	//TODO create a html page which will show all products
+	
+	
 }
