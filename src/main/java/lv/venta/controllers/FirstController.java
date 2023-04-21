@@ -81,7 +81,7 @@ public class FirstController {
 				}
 			}
 		}
-		model.addAttribute("packetError", "Wrong ID");
+		model.addAttribute("packetError", "Wrong ID at filtering");
 		return "error-page";//will call error-page.html
 	}
 	
@@ -115,7 +115,7 @@ public class FirstController {
 			}
 		}
 		
-		model.addAttribute("packetError", "Wrong ID");
+		model.addAttribute("packetError", "Wrong ID at update");
 		return "error-page";//will call error-page.html
 		
 		
@@ -148,5 +148,21 @@ public class FirstController {
 	}
 	
 	//TODO delete
+	@GetMapping("/delete-product/{id}") //localhost:8080/delete-product/2
+	public String getDeleteProductFunc(@PathVariable("id") long id, Model model) {
+		if(id > 0) {
+			for(Product temp: allProducts) {
+				if(temp.getId() == id) {
+					allProducts.remove(temp);
+					model.addAttribute("packet", allProducts);
+					return "all-products-page";//will call all-products-page.html
+				}
+			}
+		}
+		
+		model.addAttribute("packetError", "Wrong ID at delete");
+		return "error-page";//will call error-page.html
+	}
+	
 	
 }
