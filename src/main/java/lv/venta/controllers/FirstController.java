@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lv.venta.model.Product;
+import lv.venta.services.ICRUDProductService;
 
 @Controller
 public class FirstController {
 	
-	
-
+	@Autowired
+	private ICRUDProductService CRUDservice;
 	
 	
 	@GetMapping("/hello") //localhost:8080/hello
@@ -45,7 +47,7 @@ public class FirstController {
 	@GetMapping("/all-products")//localhost:8080/all-products
 	public String getAllproductsFunc(Model model)
 	{
-		model.addAttribute("packet", allProducts);
+		model.addAttribute("packet", CRUDservice.retrieveAllProducts());
 		return "all-products-page";// will show all-products-page.html
 	}
 	//TODO create a html page which will show all products
@@ -54,31 +56,31 @@ public class FirstController {
 	
 	@GetMapping("/all-products-find") //localhost:8080/all-products-find?id=2
 	public String getAllProductsFindFunc(@RequestParam("id") long id, Model model) {
-		if(id > 0) {
-			for(Product temp: allProducts) {
-				if(temp.getId() == id) {
-					model.addAttribute("packet", temp);
-					return "one-product-page";//will call one-product-page.html
-				}
-			}
+		try {
+			Product prod = CRUDservice.retrieveProductById(id);
+			model.addAttribute("packet", prod);
+			return "one-product-page";//will call one-product-page.html
 		}
-		model.addAttribute("packetError", "Wrong ID");
-		return "error-page";//will call error-page.html
+		catch (Exception e) {
+			model.addAttribute("packetError", e.getMessage());
+			return "error-page";//will call error-page.html
+		}
+		
+		
 	}
 	
 	//TODO controller for localhost:8080/all-products/2
 	@GetMapping("/all-products/{id}") //localhost:8080/all-products/2
 	public String getAllProductsByIdFunc(@PathVariable("id") long id, Model model) {
-		if(id > 0) {
-			for(Product temp: allProducts) {
-				if(temp.getId() == id) {
-					model.addAttribute("packet", temp);
-					return "one-product-page";//will call one-product-page.html
-				}
-			}
+		try {
+			Product prod = CRUDservice.retrieveProductById(id);
+			model.addAttribute("packet", prod);
+			return "one-product-page";//will call one-product-page.html
 		}
-		model.addAttribute("packetError", "Wrong ID at filtering");
-		return "error-page";//will call error-page.html
+		catch (Exception e) {
+			model.addAttribute("packetError", e.getMessage());
+			return "error-page";//will call error-page.html
+		}
 	}
 	
 	
@@ -91,12 +93,15 @@ public class FirstController {
 	
 	@PostMapping("/add-product")
 	public String postAddProductFunc(Product product) { //retrieve product with all parameters
-		//TODO verify if this product already exists
-		Product newProduct = new Product(product.getTitle(),
-				product.getDescription(), product.getPrice(), product.getQuantity());
-		allProducts.add(newProduct);
-		
-		return "redirect:/all-products";//will call /all-products endpoint
+		try
+		{
+			CRUDservice.addNewProduct(product.getTitle(), product.getDescription(),
+				product.getPrice(), product.getQuantity());
+			return "redirect:/all-products";//will call /all-products endpoint
+		}
+		catch (Exception e) {
+			return "redirect:/error";
+		}
 	}
 	
 	
