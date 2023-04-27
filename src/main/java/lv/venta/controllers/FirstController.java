@@ -18,11 +18,7 @@ import lv.venta.model.Product;
 public class FirstController {
 	
 	
-	private ArrayList<Product> allProducts = new ArrayList<>(Arrays.asList(
-			new Product("Watermelon", "Pink", 1.23f, 4),
-			new Product("Tomato", "Red", 0.99f, 3),
-			new Product("Grapes", "Purple", 12.3f, 4)
-			));
+
 	
 	
 	@GetMapping("/hello") //localhost:8080/hello
