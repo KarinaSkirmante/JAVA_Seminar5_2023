@@ -68,13 +68,44 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 
 	@Override
 	public void updateById(long id, String title, String description, float price, int quantity) throws Exception {
-		// TODO Auto-generated method stub
-		
+		if(id > 0) {
+			if(title!=null && description!=null && price>0 &&
+					price < 10000 && quantity >= 0 && quantity < 100000) {
+				
+				boolean isFound = false;
+				for(Product temp: allProducts) {
+					if(temp.getId()==id) {
+						temp.setTitle(title);
+						temp.setDescription(description);
+						temp.setPrice(price);
+						temp.setQuantity(quantity);
+						isFound = true;
+						break;
+					}
+				}
+				if(!isFound) {
+					throw new Exception("There is not product with this ID");
+				}
+				
+				
+			}
+			else
+			{
+				throw new Exception("Incorrect params");
+			}
+		}
+		else
+		{
+			throw new Exception("ID need to be positive");
+		}
 	}
 
 	@Override
 	public void deleteById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
+		Product deletedProduct = retrieveProductById(id);
+		allProducts.remove(deletedProduct);
+		
 		
 	}
 
