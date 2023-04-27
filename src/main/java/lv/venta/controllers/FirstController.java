@@ -107,17 +107,19 @@ public class FirstController {
 	
 	@GetMapping("/update-product/{id}") //localhost:8080/update-product/2
 	public String getUpdateProductFunc(@PathVariable("id") long id, Model model) {
-		if(id > 0) {
-			for(Product temp: allProducts) {
-				if(temp.getId() == id) {
-					model.addAttribute("product", temp);
-					return "update-product-page";//will call update-product-page.html
-				}
-			}
+		
+		try
+		{
+			Product prod = CRUDservice.retrieveProductById(id);
+			model.addAttribute("product", prod);
+			return "update-product-page";//will call update-product-page.html
+		}
+		catch (Exception e) {
+			model.addAttribute("packetError", e.getMessage());
+			return "error-page";//will call error-page.html
 		}
 		
-		model.addAttribute("packetError", "Wrong ID at update");
-		return "error-page";//will call error-page.html
+		
 		
 		
 	}
@@ -125,20 +127,16 @@ public class FirstController {
 	@PostMapping("/update-product/{id}")
 	public String postUpdateProductFunc(@PathVariable("id") long id, Product product)//edited product
 	{
-		for(Product temp: allProducts) {
-			if(temp.getId() == id) {
-				temp.setTitle(product.getTitle());
-				temp.setDescription(product.getDescription());
-				temp.setPrice(product.getPrice());
-				temp.setQuantity(product.getQuantity());
-				
-				
-				return "redirect:/all-products/"+id; //will call localhost:8080/all-products/2 endpoint
-				}
-			
-			}
-		
-		return "redirect:/error"; //will call localhost:8080/error
+		try
+		{
+			CRUDservice.updateById(id, product.getTitle(), product.getDescription(),
+				product.getPrice(), product.getQuantity());
+			return "redirect:/all-products/"+id; //will call localhost:8080/all-products/2 endpoint
+		}
+		catch(Exception e)
+		{
+			return "redirect:/error"; //will call localhost:8080/error
+		}
 		
 	}
 
@@ -151,18 +149,18 @@ public class FirstController {
 	//TODO delete
 	@GetMapping("/delete-product/{id}") //localhost:8080/delete-product/2
 	public String getDeleteProductFunc(@PathVariable("id") long id, Model model) {
-		if(id > 0) {
-			for(Product temp: allProducts) {
-				if(temp.getId() == id) {
-					allProducts.remove(temp);
-					model.addAttribute("packet", allProducts);
-					return "all-products-page";//will call all-products-page.html
-				}
-			}
+		try
+		{
+			CRUDservice.deleteById(id);
+			model.addAttribute("packet", CRUDservice.retrieveAllProducts());
+			return "all-products-page";//will call all-products-page.html
+		}
+		catch (Exception e) {
+			model.addAttribute("packetError", e.getMessage());
+			return "error-page";//will call error-page.html
 		}
 		
-		model.addAttribute("packetError", "Wrong ID at delete");
-		return "error-page";//will call error-page.html
+		
 	}
 	
 	
