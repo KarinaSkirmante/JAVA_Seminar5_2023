@@ -1,9 +1,20 @@
 package lv.venta.model;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 public class Product {
+	@NotNull
+	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+")
+	@Size(min = 4, max = 100)
 	private String title;
 	private String description;
 	private float price;
+	@Min(0)
+	@Max(100000)
 	private int quantity;
 	private long id;
 	private static long idCounter = 1;
