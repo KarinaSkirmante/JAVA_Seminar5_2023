@@ -7,15 +7,28 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class Product {
+	
 	@NotNull
-	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+")
-	@Size(min = 4, max = 100)
+	@Size(min = 3, max = 150)
+	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+")//only latin letters and space
 	private String title;
+	
+	
+	@NotNull
+	@Size(min = 5, max =400)
+	@Pattern(regexp = "[A-Z]{1}[a-z0-9\\ ]+")//only latin letters and space
 	private String description;
-	private float price;
+	
+	
 	@Min(0)
-	@Max(100000)
+	@Max(10000)
+	private float price;
+
+	@Min(0)
+	@Max(1000000)
 	private int quantity;
+	
+	
 	private long id;
 	private static long idCounter = 1;
 	public String getTitle() {
