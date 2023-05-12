@@ -89,7 +89,9 @@ public class FirstController {
 	@PostMapping("/add-product")
 	public String postAddProductFunc(@Valid Product product, BindingResult result) { // retrieve product with all
 																						// parameters
-
+		//TODO add validation also in update
+		//TODO add Your own massages in validation annotations
+		
 		if (!result.hasErrors()) {
 			try {
 				CRUDservice.addNewProduct(product.getTitle(), product.getDescription(), product.getPrice(),
@@ -120,14 +122,22 @@ public class FirstController {
 	}
 
 	@PostMapping("/update-product/{id}")
-	public String postUpdateProductFunc(@PathVariable("id") long id, Product product)// edited product
+	public String postUpdateProductFunc(@PathVariable("id") long id, @Valid Product product,
+			BindingResult result)// edited product
 	{
-		try {
-			CRUDservice.updateById(id, product.getTitle(), product.getDescription(), product.getPrice(),
-					product.getQuantity());
-			return "redirect:/all-products/" + id; // will call localhost:8080/all-products/2 endpoint
-		} catch (Exception e) {
-			return "redirect:/error"; // will call localhost:8080/error
+		
+		if(!result.hasErrors()) {
+			try {
+				CRUDservice.updateById(id, product.getTitle(), product.getDescription(), product.getPrice(),
+						product.getQuantity());
+				return "redirect:/all-products/" + id; // will call localhost:8080/all-products/2 endpoint
+			} catch (Exception e) {
+				return "redirect:/error"; // will call localhost:8080/error
+			}
+		}
+		else
+		{
+			return "update-product-page";
 		}
 
 	}

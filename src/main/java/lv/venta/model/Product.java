@@ -9,14 +9,14 @@ import jakarta.validation.constraints.Size;
 public class Product {
 	
 	@NotNull
-	@Size(min = 3, max = 150)
-	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+")//only latin letters and space
+	@Size(min = 3, max = 150 )
+	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+", message = "Only Latin letters and space")//only latin letters and space
 	private String title;
 	
 	
 	@NotNull
 	@Size(min = 5, max =400)
-	@Pattern(regexp = "[A-Z]{1}[a-z0-9\\ ]+")//only latin letters and space
+	@Pattern(regexp = "[A-Z]{1}[a-z0-9\\ ]+", message = "Only Latin letters and space")//only latin letters and space
 	private String description;
 	
 	
